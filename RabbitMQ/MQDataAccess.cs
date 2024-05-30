@@ -1,11 +1,8 @@
 ﻿using System.Text;
-using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
 using WeatherUI.Models;
-//using WeatherForecastGateway.Gateway;
-//using WeatherForecastGateway.Models;
+
 
 namespace WeatherUI.RabbitMQ
 {
@@ -13,8 +10,6 @@ namespace WeatherUI.RabbitMQ
 	{
 		private IModel _channel { get; set; }
 		private readonly IMQMessageServices _messageServices;
-
-		//private GatewayService _gatewayService;
 
 		public MQDataAccess(IMQMessageServices messageServices)
 		{
@@ -63,7 +58,6 @@ namespace WeatherUI.RabbitMQ
 			catch (Exception)
 			{
 				Console.WriteLine("could not process message");
-				throw;
 			}
 			finally
 			{
@@ -75,23 +69,21 @@ namespace WeatherUI.RabbitMQ
 		{
 			var weatherData = JsonConvert.DeserializeObject<APIResponse>(message.Message.ToString());
 
-			Console.WriteLine($"Maximum temperature: {weatherData.Forecast.Forecastday.First().Day.Maxtemp_c}");
+			if (weatherData != null && weatherData.Forecast != null && weatherData.Forecast.Forecastday != null)
+			{
+				Console.WriteLine($"Maximum temperature: {weatherData.Forecast.Forecastday.First().Day.Maxtemp_c}");
+			}
+			else
+			{
+                Console.WriteLine("something went wrong, try again");
+            }
 			_messageServices.ToggleMessageReceived();
 		}
 
 		public void SendMessage(City message)
 		{
-			//_messageServices.ToggleMessageReceived();
 			var byteArray = Encoding.Default.GetBytes(JsonConvert.SerializeObject(message));
 			_channel.BasicPublish("Weather-Request-Exchange", "request.forecast", body: byteArray);
-		}
-
-		public void CheckConnection()
-		{
-			//if (!_channel.IsOpen)
-			//{
-			//	CreateConnection();
-			//}
 		}
 	}
 }

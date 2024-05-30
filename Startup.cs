@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WeatherUI.RabbitMQ;
+﻿using WeatherUI.RabbitMQ;
 
 namespace WeatherUI
 {
@@ -31,7 +26,6 @@ namespace WeatherUI
 				}
 				city = _mqDataAccess.GetCity();
 			}
-
 		}
 	}
 }

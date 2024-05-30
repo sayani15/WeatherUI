@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System.Security.Authentication.ExtendedProtection;
 using WeatherUI;
 using WeatherUI.RabbitMQ;
 using Microsoft.Extensions.Hosting;
