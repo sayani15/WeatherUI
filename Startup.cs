@@ -18,9 +18,7 @@ namespace WeatherUI
 			_mqMessageServices = mqMessageServices;
         }
         public void Run()
-		{
-			
-			var mQMessageServices = new MQMessageServices();
+		{			
 			var city = _mqDataAccess.GetCity();
 
 			while (city.Location != "q")
@@ -28,7 +26,7 @@ namespace WeatherUI
 				_mqDataAccess.SendMessage(city);
 				while (!_mqMessageServices.HasReceivedMessage)
 				{
-					Thread.Sleep(5000);
+					Thread.Sleep(3500);
 					break;
 				}
 				city = _mqDataAccess.GetCity();

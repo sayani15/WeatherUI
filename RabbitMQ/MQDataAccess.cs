@@ -76,11 +76,12 @@ namespace WeatherUI.RabbitMQ
 			var weatherData = JsonConvert.DeserializeObject<APIResponse>(message.Message.ToString());
 
 			Console.WriteLine($"Maximum temperature: {weatherData.Forecast.Forecastday.First().Day.Maxtemp_c}");
+			_messageServices.ToggleMessageReceived();
 		}
 
 		public void SendMessage(City message)
 		{
-			_messageServices.ToggleMessageReceived();
+			//_messageServices.ToggleMessageReceived();
 			var byteArray = Encoding.Default.GetBytes(JsonConvert.SerializeObject(message));
 			_channel.BasicPublish("Weather-Request-Exchange", "request.forecast", body: byteArray);
 		}
